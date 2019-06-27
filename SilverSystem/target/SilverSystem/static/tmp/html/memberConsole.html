@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="layui-row">
+    <div class="top">
+        <label>会员快速查询：</label>
+        <div class="layui-input-inline">
+            <input type="text" name="title" required lay-verify="required" placeholder="手动输入会员电话" id="member-search-by-msisdn" autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-input-inline">
+            <button class="layui-btn layui-btn-primary" style="vertical-align: middle;margin-bottom: 2px;" onclick="checkMemberByMsisdn()">查询</button>
+            <button class="layui-btn layui-btn-primary" style="vertical-align: middle;margin-bottom: 2px;" onclick="showAllMember()">列出所有会员</button>
+        </div>
+    </div>
+
+    <div class="goods_list">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th lay-data="{field:'id'}">会员姓名</th>
+                <th lay-data="{field:'name'}">会员电话</th>
+                <th lay-data="{field:'price', edit: 'text'}">会员余额</th>
+                <th lay-data="{field:'number', edit: 'text'}">宠物名称</th>
+                <!--<th lay-data="{field:'staff', edit: 'text'}">提成员工</th>-->
+                <th lay-data="{field:'remarks', edit: 'text'}">会员积分</th>
+                <th lay-data="{field:'operation'}">操作</th>
+            </tr>
+
+            </thead>
+            <tbody id="myTbody">
+
+            </tbody>
+        </table>
+    </div>
+    <div class="total ft16">
+        合计：【<span> 会员共计：<i class="totalMoney" id="member-total-number">0个</i> </span>】
+    </div>
+
+    <button class="layui-btn layui-btn-primary" style="vertical-align: middle;margin-bottom: 2px;" onclick="newMemberRegister()">新会员登记</button>
+    <button class="layui-btn layui-btn-primary" style="vertical-align: middle;margin-bottom: 2px;" onclick="newPetRegister()">会员宠物添加</button>
+    <button class="layui-btn layui-btn-primary" style="vertical-align: middle;margin-bottom: 2px;" onclick="memberRuleConfigration()">会员规则配置</button>
+    <button class="layui-btn layui-btn-primary" style="vertical-align: middle;margin-bottom: 2px;" onclick="getChargeHistore()">查询会员充值记录</button>
+    <button class="layui-btn layui-btn-primary" style="vertical-align: middle;margin-bottom: 2px;" onclick="localMsgSending()">本店推广短信群发</button>
+    <button class="layui-btn layui-btn-primary" style="vertical-align: middle;margin-bottom: 2px;" onclick="areaMsgSending()">地域推广短信群发</button>
+    <button class="layui-btn layui-btn-primary" style="vertical-align: middle;margin-bottom: 2px;" onclick="petFileSearch()">宠物档案查询</button>
+
+
+
+</div>
+
+<div class="mask_member_box3" id="member-box-register" >
+    <div class="mask"></div>
+    <div class="box">
+        <div class="box_top" >新会员注册</div>
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">会员姓名：</label></div>
+            <div class="block_right"><input type="text" class="layui-input" id="member-name"  placeholder="请输入会员姓名"  style="border: none;" /></div>
+        </div>
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">会员手机号码：</label></div>
+            <div class="block_right"><input type="text" class="layui-input" id="member-msisdn"  placeholder="请输入会员电话"  style="border: none;" /></div>
+        </div>
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">首充金额：</label></div>
+            <div class="block_right"><input type="text" class="layui-input" id="member-charge-amount"  placeholder="请输入会员充值金额"  style="border: none;" /></div>
+        </div>
+
+        <div class="box_block box_block3">
+            <div class="block_left"><p><input type="checkbox" name="member-register-supply" value="" onclick="checkCheckedChargeGift(this)" />会员赠费</p></div>
+            <div class="block_right"><input type="text" class="layui-input" id="member-charge-gift"  placeholder="请输入会员赠费金额"  readonly="readonly"
+                                            onclick="checkEditAble(this)" style="border: none;" /></div>
+
+        </div>
+
+        <div class="box_block box_block3">
+
+            <div class="box_block_member box_block1">
+                <div class="block_left"><p><input type="checkbox" name="member-register-supply" value="" onclick="checkCheckedOff(this)" />会员折扣</p></div>
+                <div class="block_right"></div>
+            </div>
+
+
+            <div class="box_block_member box_block1_member">
+                <div class="block_left_member_box"><label for="">服务折扣：</label></div>
+                <div class="block_right_member_box"><input type="text" class="layui-input" id="member-service-off"  placeholder="输入服务折扣(1以内)"  readonly="readonly"
+                                                           onclick="checkEditAble(this)" style="border: none;" /></div>
+            </div>
+
+            <div class="box_block_member box_block1_member">
+                <div class="block_left_member_box"><label for="">商品折扣：</label></div>
+                <div class="block_right_member_box"><input type="text" class="layui-input" id="member-goods-off"  placeholder="输入商品折扣(1以内)" readonly="readonly"
+                                                           onclick="checkEditAble(this)" style="border: none;" /></div>
+            </div>
+
+
+        </div>
+
+
+        <div class="bot">
+            <input type="submit" value="提交" onclick="submitNewMember()">
+            <input type="text" value="取消"  id="member-submit-cancel" onclick="cancelBox('member-box-register')">
+        </div>
+    </div>
+</div>
+
+<!--宠物信息添加basicInfo-->
+<div class="mask_member_pet_box" id="member-box-pet-basic-info" >
+    <div class="mask"></div>
+    <div class="box">
+        <div class="box_top" >新增宠物</div>
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">请选择宠物类型：</label></div>
+            <div class="block_right">
+                <select class="layui-select" name="" id="member-pet-type" onclick="checkPetType()">
+                    <option value="0">请选择宠物类型</option>
+                    <option value="cat">宠物猫</option>
+                    <option value="dog">宠物狗</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">会员手机号码：</label></div>
+            <div class="block_right"><input type="text" class="layui-input" id="member-pet-msisdn"  placeholder="请输入会员手机号码"  style="border: none;" /></div>
+        </div>
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">会员宠物名称：</label></div>
+            <div class="block_right"><input type="text" class="layui-input" id="member-pet-name"  placeholder="请输入宠物名称"  style="border: none;" /></div>
+        </div>
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">会员宠物年龄：</label></div>
+            <div class="block_right"><input type="text" class="layui-input" id="member-pet-age"  placeholder="请输入会员宠物年龄"  style="border: none;" /></div>
+        </div>
+
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">会员宠物生日：</label></div>
+            <div class="block_right">
+                <div class="mt40">
+                    <div class="c-datepicker-date-editor c-datepicker-single-editor J-datepicker-day mt10">
+                        <i class="c-datepicker-range__icon kxiconfont icon-clock"></i>
+                        <input type="text" autocomplete="off" name="" placeholder="选择入店日期" class="c-datepicker-data-input only-date" value="" id="member-pet-birth" >
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">会员宠物性别：</label></div>
+            <div class="block_right">
+                <select class="layui-select" name="" id="member-pet-sex">
+                    <option value="0">请选择宠物性别</option>
+                    <option value="male">公</option>
+                    <option value="female">母</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">会员宠物种类：</label></div>
+            <div class="block_right">
+
+                <input type="text" placeholder="选择狗狗品种" id="member-pet-species" name="">
+                <div id="in_city" style="display: none"></div>
+            </div>
+        </div>
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">会员宠物颜色：</label></div>
+            <div class="block_right">
+                <select class="layui-select" name="" id="member-pet-color">
+                    <option value="0">请选择宠物颜色</option>
+
+                </select>
+            </div>
+        </div>
+
+
+
+
+        <div class="bot">
+            <input type="submit" value="提交" onclick="submitNewPet()">
+            <input type="text" value="取消"  id="member-pet-submit-cancel" onclick="cancelBox('member-box-pet-basic-info')">
+        </div>
+    </div>
+</div>
+
+<div class="mask_box_member_detail_info" >
+    <div class="mask"></div>
+    <div class="box">
+        <div class="box_top" >会员详细信息</div>
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label >会员ID：</label></div>
+            <div class="block_right_member">
+                <input type="text" class="layui-input" id="member-detail-id"  placeholder="请输入或扫描虚增商品编码"  style="border: none;" />
+            </div>
+            <div class="block_right_last_member">
+                <a>修改</a>
+            </div>
+
+        </div>
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label >会员姓名：</label></div>
+            <div class="block_right_member"><input type="text" class="layui-input" id="member-detail-name"  placeholder="请输入或扫描虚增商品编码"  style="border: none;" /></div>
+            <div class="block_right_last_member">
+                <a>修改</a>
+            </div>
+        </div>
+        <div class="box_block box_block1">
+            <div class="block_left"><label >会员电话：</label></div>
+            <div class="block_right_member"><input type="text" class="layui-input" id="member-detail-msisdn"  placeholder="请输入或扫描虚增商品编码"  style="border: none;" /></div>
+            <div class="block_right_last_member">
+                <a>修改</a>
+            </div>
+        </div>
+        <div class="box_block box_block1">
+            <div class="block_left"><label >会员服务折扣：</label></div>
+            <div class="block_right_member"><input type="text" class="layui-input" id="member-detail-serviceOff"  placeholder="请输入或扫描虚增商品编码"  style="border: none;" /></div>
+            <div class="block_right_last_member">
+                <a>修改</a>
+            </div>
+        </div>
+        <div class="box_block box_block1">
+            <div class="block_left"><label >会员商品折扣：</label></div>
+            <div class="block_right_member"><input type="text" class="layui-input" id="member-detail-goodsOff"  placeholder="请输入或扫描虚增商品编码"  style="border: none;" /></div>
+            <div class="block_right_last_member">
+                <a>修改</a>
+            </div>
+        </div>
+
+        <div class="box_block box_block2">
+
+
+
+        </div>
+
+        <div class="box_block box_block2">
+            <div class="block_left"><label >已选择：</label></div>
+            <div class="block_right">
+                <i class="fa fa-cube" aria-hidden="true"><a id="store-cls-box-has-select" ></a></i>
+            </div>
+        </div>
+
+
+
+        <div class="bot">
+            <input type="submit" value="确认" onclick="comfirmMemberDetail()">
+            <input type="text" value="取消"  id="vos-submit-cancel" onclick="cancelConfirmBtn('mask_box_member_detail_info')">
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script type="text/javascript">
+    $(function(){
+        var DATAPICKERAPI = {
+// 默认input显示当前月,自己获取后填充
+            activeMonthRange: function () {
+                return {
+                    begin: moment().set({ 'date': 1, 'hour': 0, 'minute': 0, 'second': 0 }).format('YYYY-MM-DD HH:mm:ss'),
+                    end: moment().set({ 'hour': 23, 'minute': 59, 'second': 59 }).format('YYYY-MM-DD HH:mm:ss')
+                }
+            },
+            shortcutMonth: function () {
+// 当月
+                var nowDay = moment().get('date');
+                var prevMonthFirstDay = moment().subtract(1, 'months').set({ 'date': 1 });
+                var prevMonthDay = moment().diff(prevMonthFirstDay, 'days');
+                return {
+                    now: '-' + nowDay + ',0',
+                    prev: '-' + prevMonthDay + ',-' + nowDay
+                }
+            },
+// 注意为函数：快捷选项option:只能同一个月份内的
+            rangeMonthShortcutOption1: function () {
+                var result = DATAPICKERAPI.shortcutMonth();
+                return [{
+                    name: '昨天',
+                    day: '-1,-1',
+                    time: '00:00:00,23:59:59'
+                }, {
+                    name: '这一月',
+                    day: result.now,
+                    time: '00:00:00,'
+                }, {
+                    name: '上一月',
+                    day: result.prev,
+                    time: '00:00:00,23:59:59'
+                }];
+            },
+// 快捷选项option
+            rangeShortcutOption1: [{
+                name: '最近一周',
+                day: '-7,0'
+            }, {
+                name: '最近一个月',
+                day: '-30,0'
+            }, {
+                name: '最近三个月',
+                day: '-90, 0'
+            }],
+            singleShortcutOptions1: [{
+                name: '今天',
+                day: '0'
+            }, {
+                name: '昨天',
+                day: '-1',
+                time: '00:00:00'
+            }, {
+                name: '一周前',
+                day: '-7'
+            }]
+        };
+//十分秒年月日单个
+        $('.J-datepicker').datePicker({
+            hasShortcut:true,
+            min:'2018-01-01 04:00:00',
+            max:'2019-04-29 20:59:59',
+            shortcutOptions:[{
+                name: '今天',
+                day: '0'
+            }, {
+                name: '昨天',
+                day: '-1',
+                time: '00:00:00'
+            }, {
+                name: '一周前',
+                day: '-7'
+            }],
+            hide:function(){
+                console.info(this)
+            }
+        });
+
+//年月日单个
+        $('.J-datepicker-day').datePicker({
+            hasShortcut: true,
+            format:'YYYY-MM-DD',
+            shortcutOptions: [{
+                name: '今天',
+                day: '0'
+            }, {
+                name: '昨天',
+                day: '-1'
+            }, {
+                name: '一周前',
+                day: '-7'
+            }]
+        });
+
+//年月日范围
+        $('.J-datepicker-range-day').datePicker({
+            hasShortcut: true,
+            format: 'YYYY-MM-DD',
+            isRange: true,
+            shortcutOptions: DATAPICKERAPI.rangeShortcutOption1
+        });
+
+//十分年月日单个
+        $('.J-datepickerTime-single').datePicker({
+            format: 'YYYY-MM-DD HH:mm'
+        });
+
+//十分年月日范围
+        $('.J-datepickerTime-range').datePicker({
+            format: 'YYYY-MM-DD HH:mm',
+            isRange: true
+        });
+
+//十分秒年月日范围，包含最大最小值
+        $('.J-datepicker-range').datePicker({
+            hasShortcut: true,
+            min: '2018-01-01 06:00:00',
+            max: '2019-04-29 20:59:59',
+            isRange: true,
+            shortcutOptions: [{
+                name: '昨天',
+                day: '-1,-1',
+                time: '00:00:00,23:59:59'
+            },{
+                name: '最近一周',
+                day: '-7,0',
+                time:'00:00:00,'
+            }, {
+                name: '最近一个月',
+                day: '-30,0',
+                time: '00:00:00,'
+            }, {
+                name: '最近三个月',
+                day: '-90, 0',
+                time: '00:00:00,'
+            }]
+        });
+//十分秒年月日范围，限制只能选择同一月，比如2018-10-01到2018-10-30
+        $('.J-datepicker-range-betweenMonth').datePicker({
+            isRange: true,
+            between:'month',
+            hasShortcut: true,
+            shortcutOptions: DATAPICKERAPI.rangeMonthShortcutOption1()
+        });
+
+//十分秒年月日范围，限制开始结束相隔天数小于30天
+        $('.J-datepicker-range-between30').datePicker({
+            isRange: true,
+            between: 30
+        });
+
+//年月单个
+        $('.J-yearMonthPicker-single').datePicker({
+            format: 'YYYY-MM',
+            min: '2018-01',
+            max: '2019-04'
+        });
+
+//选择年
+        $('.J-yearPicker-single').datePicker({
+            format: 'YYYY',
+            min: '2018',
+            max: '2020'
+        });
+
+
+    });
+</script>
+
+
+<script type="text/javascript">
+
+    var cityA = $(".city_a_le1 a"); //城市
+    var pla = $("#member-pet-species");  //出发地
+    var dest = $("#destination");  //目的地
+    // 默认值
+    inCity.width = "845";  //城市选择框  宽
+    inCity.height = "auto";  //城市选择框  高
+    inCity.id = "#in_city";  //城市选择框  父级ID
+    inCity.Children = '.city_a_le1';  //城市名box
+    // 初始化 城市HTML模板
+    $(inCity.id).prepend(inCity._template.join(''));
+    inCity.Hot(cityA);
+
+    //城市 导航
+    var apay = $(".screen a");
+
+    var placeThis; //当前选择标签
+    apay.click(function(obj){  //城市导航
+        inCity.payment($(this));
+    })
+
+    inCity.place(pla); //出发地
+    inCity.destination(dest);  //目的地
+    inCity.cityClick(cityA); //显示赋值城市
+</script>
+
+</html>

@@ -1,0 +1,14 @@
+
+#in_city { background: #ddd;position: absolute;font-size:1px;margin-left:-190%;margin-top:-80px;z-index: 9999;border: solid 1px #d7d7d7; background: #fff;padding-bottom: 1px; }
+.screen { overflow: hidden; }
+.screen a { float: left; color: #129ace; padding: 1px 6px; text-align: center; border-bottom: solid 2px #c92436; }
+.screen a:hover { color: #c92436; }
+.screen .shar { color: #404040; border: solid 1px #c92436; border-bottom: none; }
+.city_a_le1 { padding: 1px; overflow: hidden; }
+.city_a_le1 a { float: left; width: 20%; margin: 2px 0; }
+.Letter span { width: 5%; float: left; text-align: center; padding: 2px 0; }
+.Letter div { width:95%; float: left; }
+.city_a_le1 a:hover { color: #c92436; }
+.Letter div a { width: 16%; }
+#in_city h1 { padding: 1px 0; color: #ababab; text-indent: 2%; }
+#member-pet-species { border: solid 1px #e1e1e1; height: 30px; border-radius: 3px; text-indent: 10px; margin: 20px 0 10px 10px; width: 100px;}

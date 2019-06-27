@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+</head>
+<body>
+<div class="layui-row">
+    <div class="top">
+        <label>商品名称：</label>
+        <div class="layui-input-inline">
+            <input type="text" name="title" required lay-verify="required" placeholder="手动输入商品名称" id="store-search-by-name" autocomplete="off" class="layui-input" onchange="searchGoods(this)">
+        </div>
+        <div class="layui-input-inline">
+            <button class="layui-btn layui-btn-primary" style="vertical-align: middle;margin-bottom: 2px;" onclick="checkStoreByName()">名称快速查询</button>
+            <button class="layui-btn layui-btn-primary" style="vertical-align: middle;margin-bottom: 2px;" onclick="showAllGoods()">列出所有商品</button>
+        </div>
+    </div>
+    <div class="top">
+        <label>商品分类：</label>
+
+        <div class="layui-input-inline">
+            <i class="fa fa-cube" aria-hidden="true"><a type="dfood" onclick="classifyGoods(this)">犬用主粮</a></i>
+            <i class="fa fa-cube" aria-hidden="true"><a type="cfood" onclick="classifyGoods(this)">猫用主粮</a></i>
+            <i class="fa fa-cube" aria-hidden="true"><a type="can" onclick="classifyGoods(this)">罐头类</a></i>
+            <i class="fa fa-cube" aria-hidden="true"><a type="snacks" onclick="classifyGoods(this)">零食类</a></i>
+            <i class="fa fa-cube" aria-hidden="true"><a type="ec" onclick="classifyGoods(this)">环境清洁类</a></i>
+            <i class="fa fa-cube" aria-hidden="true"><a type="csm" onclick="classifyGoods(this)">消耗品</a></i>
+            <i class="fa fa-cube" aria-hidden="true"><a type="toy" onclick="classifyGoods(this)">玩具类</a></i>
+            <i class="fa fa-cube" aria-hidden="true"><a type="med" onclick="classifyGoods(this)">药品类</a></i>
+            <i class="fa fa-cube" aria-hidden="true"><a type="nut" onclick="classifyGoods(this)">营养品</a></i>
+        </div>
+    </div>
+    <div class="goods_list">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th lay-data="{field:'id'}">商品编码</th>
+                <th lay-data="{field:'name'}">商品名称</th>
+                <th lay-data="{field:'price', edit: 'text'}">零售价（元）</th>
+                <th lay-data="{field:'number', edit: 'text'}">数量</th>
+                <!--<th lay-data="{field:'staff', edit: 'text'}">提成员工</th>-->
+                <th lay-data="{field:'remarks', edit: 'text'}">备注</th>
+                <th lay-data="{field:'operation'}">操作</th>
+            </tr>
+
+            </thead>
+            <tbody id="myTbody">
+
+            </tbody>
+        </table>
+    </div>
+    <div class="total ft16">
+        合计：【<span> 货品种类共计：<i class="totalMoney" id="store-total-goods">0个</i> </span>】
+    </div>
+    <table class="reading layui-table" lay-even="">
+        <tbody>
+        <tr>
+            <td>商品查找</td>
+            <td colspan="3">
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="store-search-by-id" placeholder="扫描或者手动输入商品编号" />
+                </div>
+                <button class="card_reading layui-btn" onclick="getGoodsInfoByID()">查询商品</button>
+                <a href="#" class="registration layui-btn layui-btn-primary" onclick="newGoodsAddSingle()">商品登记</a>
+                <a href="#" class="registration layui-btn layui-btn-primary" onclick="oldGoodsAppend()">商品续货</a>
+                <a href="#" class="registration layui-btn layui-btn-primary" onclick="batchGoodsAdd()">批量登记</a>
+            </td>
+        </tr>
+        <tr>
+            <td>商品编码：</td>
+            <td id="store-goods-code"></td>
+            <td>商品名称：</td>
+            <td id="store-goods-name"></td>
+        </tr>
+        <tr>
+            <td>商品库存：</td>
+            <td id="store-goods-inventory"></td>
+            <td>商品品牌：</td>
+            <td id="store-goods-brand"></td>
+        </tr>
+        <tr>
+            <td>商品单价：</td>
+            <td id="store-goods-price"></td>
+            <td>商品规格：</td>
+            <td id="store-goods-stander"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<div class="mask_box_store_edt_cls" >
+    <div class="mask"></div>
+    <div class="box">
+        <div class="box_top" >选择商品分类</div>
+
+        <div class="box_block box_block2">
+            <div class="block_left"><label >商品分类：</label></div>
+            <div class="block_right">
+                <i class="fa fa-cube" aria-hidden="true"><a type="dfood" onclick="modifyClsGoods(this)">犬用主粮</a></i>
+                <i class="fa fa-cube" aria-hidden="true"><a type="cfood" onclick="modifyClsGoods(this)">猫用主粮</a></i>
+                <i class="fa fa-cube" aria-hidden="true"><a type="can" onclick="modifyClsGoods(this)">罐头类</a></i>
+                <i class="fa fa-cube" aria-hidden="true"><a type="snacks" onclick="modifyClsGoods(this)">零食类</a></i>
+                <i class="fa fa-cube" aria-hidden="true"><a type="ec" onclick="modifyClsGoods(this)">环境清洁类</a></i>
+                <i class="fa fa-cube" aria-hidden="true"><a type="csm" onclick="modifyClsGoods(this)">消耗品</a></i>
+                <i class="fa fa-cube" aria-hidden="true"><a type="toy" onclick="modifyClsGoods(this)">玩具类</a></i>
+                <i class="fa fa-cube" aria-hidden="true"><a type="med" onclick="modifyClsGoods(this)">药品类</a></i>
+                <i class="fa fa-cube" aria-hidden="true"><a type="nut" onclick="modifyClsGoods(this)">营养品</a></i>
+            </div>
+        </div>
+
+        <div class="box_block box_block2">
+            <div class="block_left"><label >已选择：</label></div>
+            <div class="block_right">
+                <i class="fa fa-cube" aria-hidden="true"><a id="store-cls-box-has-select" ></a></i>
+            </div>
+        </div>
+
+
+
+        <div class="bot">
+            <input type="submit" value="提交" onclick="submitModifyCls()">
+            <input type="text" value="取消"  id="vos-submit-cancel" onclick="cancelSubmitBtn('mask_box_store_edt_cls')">
+        </div>
+    </div>
+</div>
+
+
+<div class="mask_box_store_add" >
+    <div class="mask"></div>
+    <div class="box">
+        <div class="box_top" >新商品添加</div>
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">商品ID：</label></div>
+            <div class="block_right"><input type="text" class="layui-input" id="store-add-single-id"  placeholder="扫描或输入商品编码"  style="border: none;" /></div>
+        </div>
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">商品名称：</label></div>
+            <div class="block_right"><input type="text" class="layui-input" id="store-add-single-name"  placeholder="请输入商品名称"  style="border: none;" /></div>
+        </div>
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">商品数量：</label></div>
+            <div class="block_right"><input type="text" class="layui-input" id="store-add-single-count"  placeholder="请输入商品数量"  style="border: none;" /></div>
+        </div>
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">商品售价：</label></div>
+            <div class="block_right"><input type="text" class="layui-input" id="store-add-single-price"  placeholder="请输入商品价格"  style="border: none;" /></div>
+        </div>
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">商品品牌：</label></div>
+            <div class="block_right"><input type="text" class="layui-input" id="store-add-single-brand"  placeholder="（非必填）请输入商品品牌"  style="border: none;" /></div>
+        </div>
+        <div class="box_block box_block1">
+            <div class="block_left"><label for="">商品规格：</label></div>
+            <div class="block_right"><input type="text" class="layui-input" id="store-add-single-stander"  placeholder="请输入商品规格" style="border: none;" /></div>
+        </div>
+
+        <div class="bot">
+            <input type="submit" value="提交" onclick="submitAddStoreSingle()">
+            <input type="text" value="取消"  id="member-submit-cancel" onclick="cancelAddStore()">
+        </div>
+    </div>
+</div>
+
+<div class="mask_box_store_continue_increase" >
+    <div class="mask"></div>
+    <div class="box">
+        <div class="box_top" >商品续货</div>
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label >商品ID：</label></div>
+            <div class="block_right"><input type="text" class="layui-input" id="store-con-code"  placeholder="请输入或扫描虚增商品编码"  style="border: none;" /></div>
+        </div>
+
+        <div class="box_block box_block1">
+            <div class="block_left"><label >续货数量：</label></div>
+            <div class="block_right"><input type="text" class="layui-input" id="store-con-number"  placeholder="输入续货商品数量"  style="border: none;" /></div>
+        </div>
+
+
+        <div class="bot">
+            <input type="submit" value="提交" onclick="submitStoreConInc()">
+            <input type="text" value="取消"  id="member-con-cancel" onclick="cancelConInc()">
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
