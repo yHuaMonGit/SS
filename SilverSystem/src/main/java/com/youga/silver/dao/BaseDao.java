@@ -15,11 +15,11 @@ public class BaseDao {
 //    private static String password=config.getPassword();
 
     private static String driver="com.mysql.jdbc.Driver";
-    //jdbc:mysql://39.100.36.179:3306/youga_pet?useUnicode=true&characterEncoding=utf-8&useSSL=false
-    private static String url="jdbc:mysql://39.100.36.179:3306/youga_pet?useUnicode=true&characterEncoding=utf-8&useSSL=false";
-    //private static String url="jdbc:mysql://39.106.169.195:3306/youga_pet";
+    //jdbc:mysql://ip:3306/youga_pet?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    private static String url="jdbc:mysql://ip:3306/youga_pet?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+    //private static String url="jdbc:mysql://ip:3306/youga_pet";
     private static String user="admin";
-    private static String password="admin123";
+    private static String password="admin";
 
     static {
         try {
